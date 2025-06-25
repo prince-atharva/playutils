@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "server"
+  ],
+  "ext": "ts",
+  "exec": "tsc --project tsconfig.server.json && node dist/index.js",
+  "ignore": [
+    "node_modules"
+  ]
+}
