@@ -8,6 +8,13 @@ const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   PORT: z.string().transform(Number).optional(),
+  NEXTAUTH_URL:z.string().min(10),
+  NEXTAUTH_SECRET:z.string().min(10),
+  MONGODB_URI:z.string().min(10),
+  GOOGLE_CLIENT_ID:z.string().min(10),
+  GOOGLE_CLIENT_SECRET:z.string().min(10),
+  GITHUB_CLIENT_ID:z.string().min(10),
+  GITHUB_CLIENT_SECRET:z.string().min(10),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)

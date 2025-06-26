@@ -1,9 +1,13 @@
 import express from "express"
+import router from "./routes";
+import cookieParser from 'cookie-parser';
 
 const app = express()
 
-// #TODO only use with express api not supported by next
-// app.use(express.json({ limit: '16kb' }))
-// app.use(express.urlencoded({ extended: false, limit: '20kb' }))
+app.use('/v1',
+  express.json({ limit: '16kb' }),
+  express.urlencoded({ extended: true, limit: '20kb' }),
+  cookieParser(),
+  router);
 
 export { app }
