@@ -12,6 +12,6 @@ interface ProfileResponse {
 
 export const Auth = {
   getProfile: async (): Promise<ProfileResponse> => {
-    return api.get<ProfileResponse>('/user')
+    return api.get<ProfileResponse>('/user/get')
   },
 }

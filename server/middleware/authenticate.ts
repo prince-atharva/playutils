@@ -43,7 +43,7 @@ export const authenticate = async (
     }
 
     req.user = {
-      id: user.id,
+      id: user._id as mongoose.Schema.Types.ObjectId,
       name: user.name,
       email: user.email,
       image: user.image,
