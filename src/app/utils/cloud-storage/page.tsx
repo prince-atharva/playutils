@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FiCloud, FiPlus, FiDatabase, FiLoader, FiExternalLink, FiTrash2 } from "react-icons/fi";
+import { FiCloud, FiPlus, FiDatabase, FiLoader, FiExternalLink, FiTrash2, FiHelpCircle } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import { ICloudStorage } from "../../../../server/model/cloudstorage.model";
 import { CloudStorageAPI, S3ConnectionData } from "@/lib/api/cloudStorage";
@@ -55,38 +55,48 @@ const CloudStoragePage = () => {
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 overflow-x-hidden">
       <AnimatedBackground />
 
-      <header className="relative z-0 w-full max-w-6xl mx-auto px-6 py-12 flex items-center gap-6 mb-8">
-        <div className="relative">
+      <header className="relative z-0 w-full max-w-6xl mx-auto px-6 py-8 flex items-center gap-10 mb-12 bg-gradient-to-br from-cyan-950/80 via-blue-900/80 to-gray-900/80 rounded-3xl shadow-2xl border border-cyan-400/20 glassmorphism overflow-hidden animate-fadeInDown">
+        {/* Animated floating clouds */}
+        <div className="relative z-10 flex-shrink-0">
           <motion.div
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 rounded-full border-2 border-cyan-400/10 border-t-cyan-400/30"
+            initial={{ rotate: 0, scale: 1 }}
+            animate={{ rotate: 360, scale: [1, 1.08, 1] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 rounded-full border-4 border-cyan-400/20 border-t-cyan-400/60 shadow-cyan-400/10 shadow-xl"
           ></motion.div>
-          <FiCloud className="w-14 h-14 text-cyan-400 drop-shadow-lg" />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0.7 }}
+            animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+            className="absolute inset-2 rounded-full bg-cyan-400/10 blur-lg"
+          />
+          <FiCloud className="w-20 h-20 text-cyan-400 drop-shadow-neon relative z-10" />
         </div>
-        <div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 drop-shadow-lg tracking-tight"
+        <div className="relative z-10">
+          <motion.h1
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.15, duration: 0.7, type: "spring" }}
+            className="text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-600 drop-shadow-neon tracking-tight animate-glow"
           >
             Cloud Storage
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-lg text-gray-400 mt-2 font-light"
+            transition={{ delay: 0.3, duration: 0.7, type: "spring" }}
+            className="text-xl text-cyan-100 mt-4 font-light max-w-xl drop-shadow-lg"
           >
-            Connect and manage your cloud storage providers
+            <span className="bg-gradient-to-r from-cyan-400/60 to-blue-400/60 bg-clip-text text-transparent font-semibold">
+              Connect, organize, and manage
+            </span>{" "}
+            your cloud storage providers with a beautiful, unified interface.
           </motion.p>
         </div>
       </header>
 
       <main className="relative z-10 w-full max-w-6xl flex flex-col items-center px-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -118,7 +128,7 @@ const CloudStoragePage = () => {
               <FiLoader className="w-10 h-10 text-blue-400 animate-spin" />
             </div>
           ) : count === 0 ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border-2 border-dashed border-gray-700 rounded-xl p-12 text-center"
@@ -140,7 +150,7 @@ const CloudStoragePage = () => {
               </motion.button>
             </motion.div>
           ) : (
-            <motion.ul 
+            <motion.ul
               initial="initial"
               animate="animate"
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
@@ -182,37 +192,33 @@ const ConnectionCard = ({
   isHovered: boolean,
 }) => {
   return (
-    <div className={`relative h-full bg-gradient-to-br from-gray-800/50 to-gray-900/80 border rounded-xl p-5 shadow-lg flex flex-col gap-3 transition-all duration-300 overflow-hidden ${
-      connection.status === "connected"
+    <div className={`relative h-full bg-gradient-to-br from-gray-800/50 to-gray-900/80 border rounded-xl p-5 shadow-lg flex flex-col gap-3 transition-all duration-300 overflow-hidden ${connection.status === "connected"
         ? "border-green-900/50 hover:border-green-700/50"
         : "border-red-900/50 hover:border-red-700/50"
-    }`}>
+      }`}>
       {/* Glow effect */}
-      <div className={`absolute inset-0 rounded-xl opacity-20 ${
-        connection.status === "connected" 
-          ? "bg-green-500" 
+      <div className={`absolute inset-0 rounded-xl opacity-20 ${connection.status === "connected"
+          ? "bg-green-500"
           : "bg-red-500"
-      } ${isHovered ? "animate-pulse" : "opacity-0"} transition-opacity duration-300`}></div>
-      
+        } ${isHovered ? "animate-pulse" : "opacity-0"} transition-opacity duration-300`}></div>
+
       <div className="relative z-10 flex flex-col h-full">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${
-              connection.status === "connected"
+            <div className={`p-2 rounded-lg ${connection.status === "connected"
                 ? "bg-green-900/30 text-green-400"
                 : "bg-red-900/30 text-red-400"
-            }`}>
+              }`}>
               <FiCloud className="w-5 h-5" />
             </div>
             <span className="font-bold text-lg text-white truncate max-w-[120px]">
               {connection.name}
             </span>
           </div>
-          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-            connection.status === "connected"
+          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${connection.status === "connected"
               ? "bg-green-900/30 text-green-400"
               : "bg-red-900/30 text-red-400"
-          }`}>
+            }`}>
             {connection.status === "connected" ? "Active" : "Inactive"}
           </span>
         </div>
@@ -250,7 +256,7 @@ const ConnectionCard = ({
 
         <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-800/50">
           <div className="flex gap-2">
-            <button 
+            <button
               className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-red-400 transition-colors"
               title="Delete connection"
             >

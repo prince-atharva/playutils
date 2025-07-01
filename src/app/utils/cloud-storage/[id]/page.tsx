@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  FiFolder, 
-  FiFile, 
-  FiDownload, 
-  FiUpload, 
-  FiTrash2, 
-  FiMoreVertical,
+import {
+  FiFolder,
+  FiFile,
+  FiDownload,
+  FiUpload,
+  FiTrash2,
   FiChevronLeft,
   FiHardDrive,
   FiPieChart,
@@ -46,15 +45,15 @@ function UploadModal({ show, onClose, onSuccess, connectionId, currentPath }: {
     e.preventDefault();
     setFiles(Array.from(e.dataTransfer.files));
   };
-  
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFiles(Array.from(e.target.files));
   };
-  
+
   const handleUpload = async () => {
     if (!files.length) return;
     setUploading(true);
@@ -76,30 +75,32 @@ function UploadModal({ show, onClose, onSuccess, connectionId, currentPath }: {
       setUploading(false);
     }
   };
-  
+
   if (!show) return null;
-  
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" aria-modal="true" role="dialog">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-8 w-full max-w-md mx-auto flex flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-full bg-blue-900/30 text-blue-500">
-            <FiUpload className="w-6 h-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-2xl animate-fadeIn" aria-modal="true" role="dialog">
+      <div className="relative bg-gradient-to-br from-[#0f172a]/90 via-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/40 rounded-3xl shadow-2xl p-10 w-full max-w-lg mx-auto flex flex-col gap-8 scale-100 animate-scaleIn glassmorphism">
+        {/* Neon Glow */}
+        <div className="absolute -inset-2 rounded-3xl pointer-events-none z-0 bg-gradient-to-br from-cyan-400/20 via-blue-400/10 to-transparent blur-2xl animate-pulse" />
+        <div className="flex items-center gap-3 z-10">
+          <div className="p-3 rounded-full bg-gradient-to-br from-blue-700/60 to-cyan-600/60 text-blue-200 shadow-lg animate-glow">
+            <FiUpload className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Upload Files</h2>
-            <p className="text-gray-400 text-sm">Destination: {currentPath || "Root"}</p>
+            <h2 className="text-2xl font-extrabold text-white drop-shadow-neon">Upload Files</h2>
+            <p className="text-cyan-200 text-sm font-mono">Destination: <span className="font-bold">{currentPath || "Root"}</span></p>
           </div>
         </div>
-        
+
         <div
-          className="flex flex-col items-center justify-center border-2 border-dashed border-cyan-500/50 rounded-xl p-8 bg-gray-800/30 cursor-pointer hover:bg-gray-700/50 transition group"
+          className="flex flex-col items-center justify-center border-2 border-dashed border-cyan-400/60 rounded-2xl p-8 bg-gradient-to-br from-gray-900/60 to-cyan-900/30 cursor-pointer hover:bg-cyan-900/30 transition group shadow-inner"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onClick={() => inputRef.current?.click()}
         >
-          <div className="p-4 mb-3 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-600/20 text-blue-400 group-hover:scale-110 transition-transform">
-            <FiUpload className="w-6 h-6" />
+          <div className="p-4 mb-3 rounded-full bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-cyan-300 group-hover:scale-110 transition-transform shadow-lg animate-glow">
+            <FiUpload className="w-7 h-7" />
           </div>
           <input
             type="file"
@@ -110,30 +111,30 @@ function UploadModal({ show, onClose, onSuccess, connectionId, currentPath }: {
             disabled={uploading}
           />
           <p className="text-center">
-            <span className="text-cyan-400 font-medium">Drag & drop files here</span>
+            <span className="text-cyan-300 font-bold animate-pulse">Drag & drop files here</span>
             <span className="text-gray-400"> or </span>
-            <span className="text-blue-400 font-medium">browse files</span>
+            <span className="text-blue-400 font-bold underline decoration-cyan-400/60">browse files</span>
           </p>
-          <p className="text-gray-500 text-sm mt-1">Supports all file types</p>
-          
+          <p className="text-cyan-400 text-xs mt-1 font-mono">Supports all file types</p>
+
           {files.length > 0 && (
             <div className="mt-6 w-full">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-400 text-sm">Selected files ({files.length})</span>
-                <button 
+                <span className="text-cyan-300 text-xs font-mono">Selected files ({files.length})</span>
+                <button
                   onClick={(e) => { e.stopPropagation(); setFiles([]); }}
-                  className="text-red-400 text-sm hover:underline"
+                  className="text-red-400 text-xs hover:underline font-bold"
                 >
                   Clear
                 </button>
               </div>
               <div className="max-h-40 overflow-y-auto pr-2">
                 {files.map((file, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-2 bg-gray-800/50 rounded-lg mb-2">
+                  <div key={idx} className="flex items-center gap-3 p-2 bg-gradient-to-r from-cyan-900/40 to-blue-900/30 rounded-lg mb-2 shadow">
                     <FiFile className="flex-shrink-0 text-cyan-400" />
                     <div className="min-w-0">
                       <p className="text-white text-sm truncate">{file.name}</p>
-                      <p className="text-gray-400 text-xs">{formatBytes(file.size)}</p>
+                      <p className="text-cyan-300 text-xs">{formatBytes(file.size)}</p>
                     </div>
                   </div>
                 ))}
@@ -141,39 +142,39 @@ function UploadModal({ show, onClose, onSuccess, connectionId, currentPath }: {
             </div>
           )}
         </div>
-        
+
         {error && (
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-3 text-red-400 text-sm">
+          <div className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-red-400 text-sm font-bold shadow animate-shake">
             {error}
           </div>
         )}
-        
+
         {uploading && (
           <div className="w-full">
-            <div className="flex justify-between text-sm text-gray-400 mb-1">
+            <div className="flex justify-between text-xs text-cyan-200 mb-1 font-mono">
               <span>Uploading...</span>
               <span>{progress}%</span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+              <div
+                className="bg-gradient-to-r from-blue-500 via-cyan-400 to-cyan-500 h-2 rounded-full animate-progress"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
           </div>
         )}
-        
-        <div className="flex gap-4 justify-end">
-          <button 
-            onClick={onClose} 
-            className="px-6 py-2.5 rounded-xl bg-gray-700 text-gray-300 hover:bg-gray-600 transition-all"
+
+        <div className="flex gap-4 justify-end z-10">
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-gray-800/80 text-cyan-200 hover:bg-gray-700 hover:text-white font-bold transition-all shadow"
             disabled={uploading}
           >
             Cancel
           </button>
-          <button 
-            onClick={handleUpload} 
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:shadow-lg hover:shadow-blue-500/20 transition-all flex items-center gap-2"
+          <button
+            onClick={handleUpload}
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-cyan-500 to-cyan-600 text-white font-bold shadow-lg hover:shadow-cyan-400/30 transition-all flex items-center gap-2 animate-glow"
             disabled={uploading || !files.length}
           >
             {uploading ? (
@@ -210,7 +211,7 @@ function NewFolderModal({ show, onClose, onSuccess, connectionId, currentPath }:
     setCreating(true);
     setError(null);
     try {
-      const folderPath = currentPath ? `${currentPath.replace(/\/$/, "")}/$import FileGrid from '@/components/FileGrid';{folderName}` : folderName;
+      const folderPath = currentPath ? `${currentPath.replace(/\/$/, "")}/${folderName}` : folderName;
       await CloudStorageAPI.createFolder(connectionId, folderPath);
       setFolderName("");
       onSuccess();
@@ -223,26 +224,27 @@ function NewFolderModal({ show, onClose, onSuccess, connectionId, currentPath }:
       setCreating(false);
     }
   };
-  
+
   if (!show) return null;
-  
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" aria-modal="true" role="dialog">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-8 w-full max-w-md mx-auto flex flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-full bg-green-900/30 text-green-500">
-            <FiFolder className="w-6 h-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-2xl animate-fadeIn" aria-modal="true" role="dialog">
+      <div className="relative bg-gradient-to-br from-gray-900/90 via-cyan-900/90 to-blue-900/90 border-2 border-green-400/40 rounded-3xl shadow-2xl p-10 w-full max-w-lg mx-auto flex flex-col gap-8 scale-100 animate-scaleIn glassmorphism">
+        <div className="absolute -inset-2 rounded-3xl pointer-events-none z-0 bg-gradient-to-br from-green-400/20 via-emerald-400/10 to-transparent blur-2xl animate-pulse" />
+        <div className="flex items-center gap-3 z-10">
+          <div className="p-3 rounded-full bg-gradient-to-br from-green-700/60 to-emerald-600/60 text-green-200 shadow-lg animate-glow">
+            <FiFolder className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Create New Folder</h2>
-            <p className="text-gray-400 text-sm">Location: {currentPath || "Root"}</p>
+            <h2 className="text-2xl font-extrabold text-white drop-shadow-neon">Create New Folder</h2>
+            <p className="text-green-200 text-sm font-mono">Location: <span className="font-bold">{currentPath || "Root"}</span></p>
           </div>
         </div>
-        <div className="space-y-2">
-          <label className="text-gray-300 text-sm">Folder name</label>
+        <div className="space-y-2 z-10">
+          <label className="text-green-300 text-sm font-bold">Folder name</label>
           <input
             type="text"
-            className="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-3 rounded-xl bg-gray-800/80 text-white border border-green-400/30 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent font-mono"
             placeholder="Enter folder name"
             value={folderName}
             onChange={e => setFolderName(e.target.value)}
@@ -251,24 +253,24 @@ function NewFolderModal({ show, onClose, onSuccess, connectionId, currentPath }:
             onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
           />
         </div>
-        
+
         {error && (
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-3 text-red-400 text-sm">
+          <div className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-red-400 text-sm font-bold shadow animate-shake">
             {error}
           </div>
         )}
-        
-        <div className="flex gap-4 justify-end">
-          <button 
-            onClick={onClose} 
-            className="px-6 py-2.5 rounded-xl bg-gray-700 text-gray-300 hover:bg-gray-600 transition-all"
+
+        <div className="flex gap-4 justify-end z-10">
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-gray-800/80 text-green-200 hover:bg-gray-700 hover:text-white font-bold transition-all shadow"
             disabled={creating}
           >
             Cancel
           </button>
-          <button 
-            onClick={handleCreate} 
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-500/20 transition-all flex items-center gap-2"
+          <button
+            onClick={handleCreate}
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-green-600 via-emerald-500 to-emerald-600 text-white font-bold shadow-lg hover:shadow-emerald-400/30 transition-all flex items-center gap-2 animate-glow"
             disabled={creating || !folderName.trim()}
           >
             {creating ? (
@@ -323,23 +325,24 @@ function RenameModal({ show, onClose, onSuccess, connectionId, currentPath, file
       setRenaming(false);
     }
   };
-  
+
   if (!show || !file) return null;
-  
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" aria-modal="true" role="dialog">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-8 w-full max-w-md mx-auto flex flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-full bg-cyan-900/30 text-cyan-500">
-            <FiFile className="w-6 h-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-2xl animate-fadeIn" aria-modal="true" role="dialog">
+      <div className="relative bg-gradient-to-br from-gray-900/90 via-cyan-900/90 to-blue-900/90 border-2 border-cyan-400/40 rounded-3xl shadow-2xl p-10 w-full max-w-lg mx-auto flex flex-col gap-8 scale-100 animate-scaleIn glassmorphism">
+        <div className="absolute -inset-2 rounded-3xl pointer-events-none z-0 bg-gradient-to-br from-cyan-400/20 via-blue-400/10 to-transparent blur-2xl animate-pulse" />
+        <div className="flex items-center gap-3 z-10">
+          <div className="p-3 rounded-full bg-gradient-to-br from-cyan-700/60 to-blue-600/60 text-cyan-200 shadow-lg animate-glow">
+            <FiFile className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Rename {file.type === 'folder' ? 'Folder' : 'File'}</h2>
-            <p className="text-gray-400 text-sm">Location: {currentPath || "Root"}</p>
+            <h2 className="text-2xl font-extrabold text-white drop-shadow-neon">Rename {file.type === 'folder' ? 'Folder' : 'File'}</h2>
+            <p className="text-cyan-200 text-sm font-mono">Location: <span className="font-bold">{currentPath || "Root"}</span></p>
           </div>
         </div>
-        
-        <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+
+        <div className="bg-gradient-to-br from-gray-800/80 to-cyan-900/30 rounded-xl p-4 border border-cyan-400/20 shadow-inner z-10">
           <div className="flex items-center gap-3">
             {file.type === "folder" ? (
               <FiFolder className="w-6 h-6 text-blue-400" />
@@ -348,18 +351,18 @@ function RenameModal({ show, onClose, onSuccess, connectionId, currentPath, file
             )}
             <div className="min-w-0">
               <p className="text-white text-sm line-through opacity-70 truncate">{file.name}</p>
-              <p className="text-gray-400 text-xs">
+              <p className="text-cyan-300 text-xs font-mono">
                 {file.type === "file" ? formatBytes(file.size) : "Folder"} • {file.lastModified ? formatDate(file.lastModified) : ""}
               </p>
             </div>
           </div>
         </div>
-        
-        <div className="space-y-2">
-          <label className="text-gray-300 text-sm">New name</label>
+
+        <div className="space-y-2 z-10">
+          <label className="text-cyan-300 text-sm font-bold">New name</label>
           <input
             type="text"
-            className="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+            className="w-full px-4 py-3 rounded-xl bg-gray-800/80 text-white border border-cyan-400/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent font-mono"
             placeholder={`Enter new ${file.type} name`}
             value={newName}
             onChange={e => setNewName(e.target.value)}
@@ -368,24 +371,24 @@ function RenameModal({ show, onClose, onSuccess, connectionId, currentPath, file
             onKeyDown={(e) => e.key === 'Enter' && handleRename()}
           />
         </div>
-        
+
         {error && (
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-3 text-red-400 text-sm">
+          <div className="bg-red-900/30 border border-red-800 rounded-lg p-3 text-red-400 text-sm font-bold shadow animate-shake">
             {error}
           </div>
         )}
-        
-        <div className="flex gap-4 justify-end">
-          <button 
-            onClick={onClose} 
-            className="px-6 py-2.5 rounded-xl bg-gray-700 text-gray-300 hover:bg-gray-600 transition-all"
+
+        <div className="flex gap-4 justify-end z-10">
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-gray-800/80 text-cyan-200 hover:bg-gray-700 hover:text-white font-bold transition-all shadow"
             disabled={renaming}
           >
             Cancel
           </button>
-          <button 
-            onClick={handleRename} 
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/20 transition-all flex items-center gap-2"
+          <button
+            onClick={handleRename}
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-blue-500 to-blue-600 text-white font-bold shadow-lg hover:shadow-cyan-400/30 transition-all flex items-center gap-2 animate-glow"
             disabled={renaming || !newName.trim() || newName === file.name}
           >
             {renaming ? (
@@ -415,26 +418,30 @@ function Breadcrumbs({ path, onNavigate }: { path: string, onNavigate: (path: st
       path: parts.slice(0, idx + 1).join('/'),
     })),
   ];
-  
+
   return (
-    <nav className="flex items-center gap-1 text-sm">
+    <nav className="flex items-center gap-1 text-sm font-mono">
       {crumbs.map((crumb, idx) => (
         <span key={crumb.path} className="flex items-center">
           <button
-            className={`flex items-center gap-1 hover:text-white transition-colors ${idx === crumbs.length - 1 ? 'font-bold text-white' : 'text-cyan-400 hover:underline'}`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg transition-all duration-200 ${idx === crumbs.length - 1
+              ? 'font-bold text-white bg-gradient-to-r from-cyan-600/80 to-blue-600/80 shadow-cyan-400/20 shadow'
+              : 'text-cyan-300 hover:underline hover:bg-cyan-900/40'
+              }`}
             onClick={() => idx !== crumbs.length - 1 && onNavigate(crumb.path)}
             disabled={idx === crumbs.length - 1}
           >
             {idx === 0 && <FiHome className="w-4 h-4" />}
             {idx !== 0 && crumb.name}
           </button>
-          {idx < crumbs.length - 1 && <span className="mx-1 text-gray-500">/</span>}
+          {idx < crumbs.length - 1 && <span className="mx-1 text-cyan-400 font-bold">/</span>}
         </span>
       ))}
     </nav>
   );
 }
 
+// --- Main Explorer Page with Attractive UI ---
 const ExplorerPage = () => {
   const router = useRouter();
   const { id } = useParams();
@@ -461,7 +468,7 @@ const ExplorerPage = () => {
   const [fileToRename, setFileToRename] = useState<FileItem | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const [batchDeleting, setBatchDeleting] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Sync currentPath with query string
   useEffect(() => {
@@ -515,10 +522,8 @@ const ExplorerPage = () => {
           });
         });
         contentsRes.data.files.forEach((file) => {
-          // Only use contentType if it looks like a MIME type
           let contentType = (file as any).contentType;
           if (!contentType || typeof contentType !== 'string' || !contentType.includes('/')) {
-            // Guess from extension
             const ext = file.key.split('.').pop()?.toLowerCase();
             if (ext === 'jpg' || ext === 'jpeg') contentType = 'image/jpeg';
             else if (ext === 'png') contentType = 'image/png';
@@ -548,7 +553,7 @@ const ExplorerPage = () => {
           });
         });
       }
-      setFiles(filesList);  
+      setFiles(filesList);
       if (statsRes.data) {
         setStorageStats({
           total: statsRes.data.totalSize,
@@ -621,7 +626,7 @@ const ExplorerPage = () => {
     setShowRenameModal(true);
   };
 
-  const filteredFiles = files.filter(file => 
+  const filteredFiles = files.filter(file =>
     file.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -633,12 +638,12 @@ const ExplorerPage = () => {
   const toggleSelect = (path: string) => {
     setSelected(sel => sel.includes(path) ? sel.filter(p => p !== path) : [...sel, path]);
   };
-  
+
   const toggleSelectAll = () => {
     if (allSelected) setSelected(sel => sel.filter(path => !allVisiblePaths.includes(path)));
     else setSelected(sel => Array.from(new Set([...sel, ...allVisiblePaths])));
   };
-  
+
   const clearSelection = () => setSelected([]);
 
   // Batch download
@@ -682,66 +687,74 @@ const ExplorerPage = () => {
         <div className="absolute w-96 h-96 bg-cyan-700 rounded-full blur-3xl opacity-30 animate-pulse -z-10" style={{ top: '20%', left: '50%', transform: 'translate(-50%, -50%)' }} />
         {/* Spinner with icon */}
         <div className="relative mb-6">
-          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-gray-900 border-4 border-cyan-500 shadow-lg">
+          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-gray-900 border-4 border-cyan-500 shadow-lg animate-glow">
             <FiHardDrive className="w-10 h-10 text-cyan-400 animate-spin-slow" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-white mb-2">Loading your cloud storage...</h2>
-        <p className="text-cyan-200 text-sm">Fetching your files and folders. Please wait!</p>
+        <h2 className="text-2xl font-extrabold text-white mb-2 drop-shadow-neon">Loading your cloud storage...</h2>
+        <p className="text-cyan-200 text-sm font-mono">Fetching your files and folders. Please wait!</p>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 overflow-x-hidden">
+    <div className="relative min-h-screen bg-gradient-to-br from-[#0f172a] via-gray-900 to-gray-800 overflow-x-hidden">
+      {/* Animated background glows */}
+      <div className="pointer-events-none fixed top-0 left-0 w-full h-full z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
+      </div>
       {/* Main Header */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
+      <header className="relative mt-10 z-10 w-full max-w-7xl mx-auto px-6 py-10 rounded-3xl bg-gradient-to-br from-cyan-900/80 via-gray-900/90 to-blue-900/80 border border-cyan-400/30 shadow-2xl backdrop-blur-2xl mb-8 animate-fadeIn glassmorphism">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="flex items-center gap-6">
             <button
               onClick={() => router.push('/utils/cloud-storage')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white font-medium transition-all"
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gray-800/80 hover:bg-cyan-800/80 text-cyan-200 hover:text-white font-bold shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 text-lg"
               aria-label="Back to Connections"
+              title="Back to Connections"
             >
-              <FiChevronLeft className="w-5 h-5" />
+              <FiChevronLeft className="w-6 h-6" />
               Back
             </button>
-            
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border border-gray-800">
-                <FiHardDrive className="w-6 h-6 text-cyan-400" />
+            <div className="flex items-center gap-5">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-900/40 to-cyan-900/40 border-2 border-cyan-400/30 shadow-xl animate-glow">
+                <FiHardDrive className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">{connection.name}</h1>
-                <p className="text-gray-400 text-sm flex items-center gap-2">
+                <h1 className="text-4xl font-extrabold text-white drop-shadow-neon tracking-wide">{connection.name}</h1>
+                <p className="text-cyan-200 text-base flex items-center gap-2 font-mono">
                   <span>{connection.bucket}</span>
-                  <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
+                  <span className="w-1 h-1 bg-cyan-600 rounded-full"></span>
                   <span>{connection.region}</span>
                 </p>
               </div>
             </div>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <button 
+
+          <div className="flex items-center gap-4">
+            <button
               onClick={handleRefresh}
-              className="p-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-cyan-400 transition-colors"
+              className="p-3 rounded-2xl bg-gray-800/80 hover:bg-cyan-800/80 text-cyan-300 hover:text-cyan-100 shadow-lg transition-all duration-300 animate-glow"
               disabled={refreshing}
+              title="Refresh"
             >
-              <FiRefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+              <FiRefreshCw className={`w-6 h-6 ${refreshing ? 'animate-spin' : ''}`} />
             </button>
-            <button 
+            <button
               onClick={() => setShowNewFolderModal(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium hover:shadow-lg hover:shadow-green-500/20 transition-all"
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-green-600 via-emerald-500 to-emerald-600 text-white font-bold shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-lg animate-glow"
+              title="Create New Folder"
             >
-              <FiFolder className="w-4 h-4" />
+              <FiFolder className="w-5 h-5" />
               New Folder
             </button>
-            <button 
+            <button
               onClick={() => setShowUploadModal(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-medium hover:shadow-lg hover:shadow-blue-500/20 transition-all"
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-500 to-cyan-600 text-white font-bold shadow-lg hover:shadow-blue-500/30 transition-all duration-300 text-lg animate-glow"
+              title="Upload Files"
             >
-              <FiUpload className="w-4 h-4" />
+              <FiUpload className="w-5 h-5" />
               Upload
             </button>
           </div>
@@ -750,17 +763,17 @@ const ExplorerPage = () => {
 
       {/* Batch actions toolbar */}
       {someSelected && (
-        <div className="fixed top-0 left-0 w-full z-40 bg-gray-900 border-b border-cyan-800/50 py-3 px-6 flex items-center gap-4 shadow-lg backdrop-blur-sm">
-          <span className="text-cyan-400 font-semibold">{selected.length} selected</span>
+        <div className="fixed top-0 left-0 w-full z-40 bg-gradient-to-r from-cyan-900/90 via-gray-900/90 to-blue-900/90 border-b border-cyan-400/30 py-3 px-6 flex items-center gap-4 shadow-lg backdrop-blur-md animate-fadeInDown">
+          <span className="text-cyan-400 font-bold">{selected.length} selected</span>
           <button
-            className="px-4 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 flex items-center gap-2"
+            className="px-4 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 flex items-center gap-2 font-bold shadow animate-glow"
             onClick={handleBatchDownload}
           >
             <FiDownload className="w-4 h-4" />
             Download
           </button>
           <button
-            className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 flex items-center gap-2"
+            className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 flex items-center gap-2 font-bold shadow animate-glow"
             onClick={handleBatchDelete}
             disabled={batchDeleting}
           >
@@ -768,7 +781,7 @@ const ExplorerPage = () => {
             {batchDeleting ? 'Deleting...' : 'Delete'}
           </button>
           <button
-            className="ml-auto px-3 py-1 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 flex items-center gap-2"
+            className="ml-auto px-3 py-1 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 flex items-center gap-2 font-bold"
             onClick={clearSelection}
           >
             Clear
@@ -778,104 +791,104 @@ const ExplorerPage = () => {
 
       <main className="relative z-10 w-full max-w-7xl mx-auto px-4 pb-12">
         {/* Storage Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-6 hover:border-cyan-800/50 transition-colors group">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 rounded-lg bg-blue-900/20 text-blue-400 group-hover:bg-blue-900/30 transition-colors">
-                <FiHardDrive className="w-5 h-5" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 animate-fadeIn">
+          <div className="bg-gradient-to-br from-cyan-900/80 via-gray-900/90 to-blue-900/80 border border-cyan-400/30 rounded-3xl p-7 shadow-xl hover:scale-105 hover:shadow-cyan-400/30 transition-all duration-300 group backdrop-blur-md glassmorphism">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-tr from-blue-500/40 to-cyan-400/40 text-cyan-300 shadow-lg group-hover:scale-110 transition-transform animate-glow">
+                <FiHardDrive className="w-7 h-7" />
               </div>
-              <h3 className="text-gray-400">Total Storage</h3>
+              <h3 className="text-lg font-bold text-cyan-200 tracking-wide font-mono">Total Storage</h3>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-3xl font-extrabold text-white drop-shadow-neon font-mono">
               {formatBytes(storageStats.total)}
             </p>
           </div>
-          
-          <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-6 hover:border-cyan-800/50 transition-colors group">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 rounded-lg bg-cyan-900/20 text-cyan-400 group-hover:bg-cyan-900/30 transition-colors">
-                <FiPieChart className="w-5 h-5" />
+
+          <div className="bg-gradient-to-br from-cyan-900/80 via-gray-900/90 to-blue-900/80 border border-cyan-400/30 rounded-3xl p-7 shadow-xl hover:scale-105 hover:shadow-cyan-400/30 transition-all duration-300 group backdrop-blur-md glassmorphism">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-tr from-cyan-500/40 to-blue-400/40 text-cyan-300 shadow-lg group-hover:scale-110 transition-transform animate-glow">
+                <FiPieChart className="w-7 h-7" />
               </div>
-              <h3 className="text-gray-400">Used Storage</h3>
+              <h3 className="text-lg font-bold text-cyan-200 tracking-wide font-mono">Used Storage</h3>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-3xl font-extrabold text-white drop-shadow-neon font-mono">
               {formatBytes(storageStats.used)}
-              <span className="text-sm font-normal text-gray-400 ml-2">
+              <span className="text-base font-normal text-cyan-200 ml-2">
                 ({Math.round((storageStats.used / storageStats.total) * 100)}%)
               </span>
             </p>
           </div>
-          
-          <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-6 hover:border-cyan-800/50 transition-colors group">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 rounded-lg bg-green-900/20 text-green-400 group-hover:bg-green-900/30 transition-colors">
-                <FiStar className="w-5 h-5" />
+
+          <div className="bg-gradient-to-br from-green-900/80 via-gray-900/90 to-emerald-900/80 border border-green-400/30 rounded-3xl p-7 shadow-xl hover:scale-105 hover:shadow-green-400/30 transition-all duration-300 group backdrop-blur-md glassmorphism">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-tr from-green-500/40 to-emerald-400/40 text-green-300 shadow-lg group-hover:scale-110 transition-transform animate-glow">
+                <FiStar className="w-7 h-7" />
               </div>
-              <h3 className="text-gray-400">Available</h3>
+              <h3 className="text-lg font-bold text-green-200 tracking-wide font-mono">Available</h3>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-3xl font-extrabold text-white drop-shadow-neon font-mono">
               {formatBytes(storageStats.available)}
             </p>
           </div>
-          
-          <div className="bg-gray-900/70 border border-gray-800 rounded-xl p-6 hover:border-cyan-800/50 transition-colors group">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-3 rounded-lg bg-purple-900/20 text-purple-400 group-hover:bg-purple-900/30 transition-colors">
-                <FiFile className="w-5 h-5" />
+
+          <div className="bg-gradient-to-br from-purple-900/80 via-gray-900/90 to-indigo-900/80 border border-purple-400/30 rounded-3xl p-7 shadow-xl hover:scale-105 hover:shadow-purple-400/30 transition-all duration-300 group backdrop-blur-md glassmorphism">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-tr from-purple-500/40 to-indigo-400/40 text-purple-300 shadow-lg group-hover:scale-110 transition-transform animate-glow">
+                <FiFile className="w-7 h-7" />
               </div>
-              <h3 className="text-gray-400">Objects</h3>
+              <h3 className="text-lg font-bold text-purple-200 tracking-wide font-mono">Objects</h3>
             </div>
-            <p className="text-2xl font-bold text-white">
+            <p className="text-3xl font-extrabold text-white drop-shadow-neon font-mono">
               {storageStats.objectCount.toLocaleString()}
             </p>
           </div>
         </div>
 
         {/* File Explorer */}
-        <div className="backdrop-blur-md bg-gray-900/70 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="backdrop-blur-md bg-gradient-to-br from-gray-900/80 via-cyan-900/60 to-blue-900/80 border border-cyan-400/20 rounded-2xl shadow-2xl overflow-hidden glassmorphism">
           {/* Toolbar */}
-          <div className="border-b border-gray-800 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="border-b border-cyan-400/20 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-cyan-900/40 via-gray-900/60 to-blue-900/40">
             <div className="flex items-center gap-4 w-full sm:w-auto">
-              <Breadcrumbs 
-                path={currentPath} 
+              <Breadcrumbs
+                path={currentPath}
                 onNavigate={(path) => setCurrentPath(path)}
               />
               {currentPath && (
-                <button 
+                <button
                   onClick={handleNavigateUp}
-                  className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
+                  className="p-2 rounded-lg bg-gray-800 hover:bg-cyan-800 text-cyan-400 hover:text-white transition-colors shadow"
                   title="Go up"
                 >
                   <FiChevronLeft className="w-5 h-5 transform rotate-90" />
                 </button>
               )}
             </div>
-            
+
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="relative w-full sm:w-64">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiSearch className="text-gray-500" />
+                  <FiSearch className="text-cyan-400" />
                 </div>
                 <input
                   type="text"
                   placeholder="Search files..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 bg-gray-800/80 border border-cyan-400/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent font-mono"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
-              <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
+
+              <div className="flex items-center gap-1 bg-gray-800/80 rounded-lg p-1 shadow">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-gray-700 text-cyan-400' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-cyan-700 text-white shadow animate-glow' : 'text-cyan-400 hover:text-white'}`}
                   title="Grid view"
                 >
                   <FiGrid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-gray-700 text-cyan-400' : 'text-gray-400 hover:text-white'}`}
+                  className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-cyan-700 text-white shadow animate-glow' : 'text-cyan-400 hover:text-white'}`}
                   title="List view"
                 >
                   <FiList className="w-5 h-5" />
@@ -883,10 +896,10 @@ const ExplorerPage = () => {
               </div>
             </div>
           </div>
-          
+
           {/* File List Header - Only for list view */}
           {viewMode === 'list' && (
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-gray-800/50 border-b border-gray-800 text-gray-400 text-sm font-medium">
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-cyan-900/30 border-b border-cyan-400/20 text-cyan-300 text-sm font-bold font-mono">
               <div className="col-span-1 flex items-center">
                 <input
                   type="checkbox"
@@ -901,35 +914,35 @@ const ExplorerPage = () => {
               <div className="col-span-2 text-right">Actions</div>
             </div>
           )}
-          
+
           {/* File Content */}
           <div className="min-h-[400px]">
             {loading ? (
-              <div className="flex justify-center p-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
+              <div className="flex justify-center p-12 w-full">
+                <div className="w-32 h-8 bg-gradient-to-r from-cyan-800/40 via-cyan-600/30 to-cyan-800/40 rounded-xl animate-pulse" />
               </div>
             ) : filteredFiles.length === 0 ? (
               <div className="p-12 text-center">
-                <div className="mx-auto w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                  <FiFolder className="w-10 h-10 text-gray-600" />
+                <div className="mx-auto w-24 h-24 bg-gradient-to-br from-cyan-900/60 to-blue-900/60 rounded-full flex items-center justify-center mb-4 shadow-lg animate-glow">
+                  <FiFolder className="w-10 h-10 text-cyan-400" />
                 </div>
-                <h3 className="text-lg text-gray-300 mb-1">
+                <h3 className="text-lg text-cyan-200 mb-1 font-bold font-mono">
                   {searchQuery ? "No files match your search" : "This folder is empty"}
                 </h3>
-                <p className="text-gray-500 mb-6">
+                <p className="text-cyan-400 mb-6 font-mono">
                   {searchQuery ? "Try a different search term" : "Upload files or create a folder to get started"}
                 </p>
                 <div className="flex gap-3 justify-center">
-                  <button 
+                  <button
                     onClick={() => setShowUploadModal(true)}
-                    className="px-4 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 flex items-center gap-2"
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:bg-cyan-700 flex items-center gap-2 font-bold shadow animate-glow"
                   >
                     <FiUpload className="w-4 h-4" />
                     Upload Files
                   </button>
-                  <button 
+                  <button
                     onClick={() => setShowNewFolderModal(true)}
-                    className="px-4 py-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 flex items-center gap-2"
+                    className="px-4 py-2 rounded-lg bg-gray-700 text-cyan-200 hover:bg-cyan-800 flex items-center gap-2 font-bold shadow"
                   >
                     <FiFolder className="w-4 h-4" />
                     New Folder
@@ -937,59 +950,76 @@ const ExplorerPage = () => {
                 </div>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 bg-gradient-to-br from-cyan-950/60 via-blue-900/40 to-gray-900/60 rounded-3xl shadow-2xl">
                 {filteredFiles.map((file, index) => (
                   <div
                     key={file.path}
-                    className={`relative bg-gray-800/50 border rounded-xl p-4 hover:border-cyan-500/50 transition-colors ${selected.includes(file.path) ? 'border-cyan-500 bg-cyan-900/10' : 'border-gray-700'}`}
-                    onClick={() => {
-                      if (file.type === 'folder') {
-                        setCurrentPath(file.path);
-                      } else {
-                        setSelectedFile(file);
-                        setShowPreview(true);
-                      }
-                    }}
+                    className={`relative group bg-gradient-to-br from-cyan-900/60 via-blue-900/40 to-gray-800/60 border-2 rounded-3xl p-6 shadow-xl hover:scale-[1.07] hover:border-cyan-400/80 hover:shadow-cyan-400/20 transition-all duration-300 cursor-pointer overflow-hidden ${selected.includes(file.path) ? 'border-cyan-500 bg-cyan-900/30 shadow-cyan-500/30 animate-glow' : 'border-cyan-400/20'}`}
+                    title={file.name}
                   >
-                    <div className="flex flex-col items-center text-center">
-                      <div className="relative mb-3">
+                    {/* Animated Glow */}
+                    <div className={`absolute -inset-1 rounded-3xl pointer-events-none z-0 transition-all duration-500 ${selected.includes(file.path) ? 'bg-cyan-400/10 blur-lg animate-pulse' : 'group-hover:bg-cyan-400/10 group-hover:blur-md'}`}></div>
+
+                    {/* Select Checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(file.path)}
+                      onChange={e => {
+                        e.stopPropagation();
+                        if (typeof toggleSelect === "function") toggleSelect(file.path);
+                      }}
+                      className="absolute top-4 left-4 z-20 accent-cyan-500 w-5 h-5 bg-gray-900/80 border border-cyan-700 rounded focus:ring-2 focus:ring-cyan-400 shadow-md"
+                      onClick={e => e.stopPropagation()}
+                      title={selected.includes(file.path) ? "Deselect" : "Select"}
+                    />
+                    <div
+                      className="flex flex-col items-center text-center relative z-10"
+                      onClick={() => {
+                        if (file.type === 'folder') {
+                          setCurrentPath(file.path);
+                        } else {
+                          setSelectedFile(file);
+                          setShowPreview(true);
+                        }
+                      }}
+                    >
+                      <div className="relative mb-4">
+                        <div className={`absolute -top-3 -left-3 w-16 h-16 rounded-full blur-2xl opacity-40 pointer-events-none ${file.type === "folder" ? "bg-blue-400" : "bg-cyan-400"}`}></div>
                         {file.type === "folder" ? (
-                          <FiFolder className="w-12 h-12 text-blue-400" />
+                          <div className="relative">
+                            <FiFolder className="w-16 h-16 text-blue-400 drop-shadow-xl group-hover:scale-110 group-hover:text-cyan-300 transition-transform duration-300 animate-glow" />
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-xs rounded-full bg-blue-900/80 text-cyan-200 font-semibold shadow group-hover:bg-cyan-700/80 transition-colors font-mono">Folder</span>
+                          </div>
                         ) : (
-                          <FiFile className="w-12 h-12 text-cyan-400" />
+                          <div className="relative">
+                            <FiFile className="w-16 h-16 text-cyan-400 drop-shadow-xl group-hover:scale-110 group-hover:text-blue-300 transition-transform duration-300 animate-glow" />
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 text-xs rounded-full bg-cyan-900/80 text-blue-200 font-semibold shadow group-hover:bg-blue-700/80 transition-colors font-mono">File</span>
+                          </div>
                         )}
                         {selected.includes(file.path) && (
-                          <div className="absolute -top-2 -right-2 w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center">
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          <div className="absolute -top-3 -right-3 w-7 h-7 bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-600 rounded-full flex items-center justify-center shadow-lg animate-bounce z-20 border-2 border-white/40">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
                           </div>
                         )}
                       </div>
-                      <h4 className="text-white font-medium text-sm truncate w-full">{file.name}</h4>
-                      <p className="text-gray-400 text-xs mt-1">
-                        {file.type === "file" ? formatBytes(file.size) : "Folder"}
+                      <h4 className="text-white font-extrabold text-base truncate w-full drop-shadow-md mt-2 group-hover:text-cyan-300 transition-colors duration-200 font-mono">{file.name}</h4>
+                      <p className="text-cyan-200 text-xs mt-1 font-mono tracking-wide">
+                        {file.type === "file" ? formatBytes(file.size) : ""}
                       </p>
                     </div>
-                    <div className="absolute top-3 right-3 flex gap-1">
-                      <button
-                        className="p-1.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-400 hover:text-white transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelected(sel => sel.includes(file.path) ? sel.filter(p => p !== file.path) : [...sel, file.path]);
-                        }}
-                        title="Select"
-                      >
-                        <FiMoreVertical className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                    {/* Fancy hover effect */}
+                    <div className="absolute inset-0 rounded-3xl pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-cyan-400/10 via-blue-400/10 to-transparent"></div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="divide-y divide-gray-800/50">
+              <div className="divide-y divide-cyan-400/10">
                 {filteredFiles.map((file, index) => (
                   <div
                     key={file.path}
-                    className={`grid grid-cols-12 gap-4 px-6 py-4 transition-colors ${selected.includes(file.path) ? 'bg-cyan-900/10' : 'hover:bg-gray-800/30'}`}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 transition-colors ${selected.includes(file.path) ? 'bg-cyan-900/10 animate-glow' : 'hover:bg-cyan-900/10'}`}
                   >
                     <div className="col-span-1 flex items-center">
                       <input
@@ -1000,7 +1030,7 @@ const ExplorerPage = () => {
                         onClick={e => e.stopPropagation()}
                       />
                     </div>
-                    <div 
+                    <div
                       className="col-span-5 flex items-center gap-3 cursor-pointer"
                       onClick={() => handleFileClick(file)}
                     >
@@ -1009,22 +1039,22 @@ const ExplorerPage = () => {
                       ) : (
                         <FiFile className="w-5 h-5 text-cyan-400" />
                       )}
-                      <span className="text-white truncate">{file.name}</span>
+                      <span className="text-white truncate font-mono">{file.name}</span>
                     </div>
-                    
-                    <div className="col-span-2 text-gray-400 flex items-center">
+
+                    <div className="col-span-2 text-cyan-300 flex items-center font-mono">
                       {file.type === "file" ? formatBytes(file.size) : "--"}
                     </div>
-                    
-                    <div className="col-span-2 text-gray-400 flex items-center">
+
+                    <div className="col-span-2 text-cyan-300 flex items-center font-mono">
                       <FiClock className="w-4 h-4 mr-2" />
                       {file.lastModified ? formatDate(file.lastModified) : "--"}
                     </div>
-                    
+
                     <div className="col-span-2 flex items-center justify-end gap-2">
                       {file.type === "file" && (
                         <button
-                          className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-400 hover:text-cyan-400 transition-colors"
+                          className="p-2 rounded-lg bg-gray-700 hover:bg-cyan-800 text-cyan-400 hover:text-white transition-colors shadow"
                           title="Download"
                           onClick={e => {
                             e.stopPropagation();
@@ -1038,14 +1068,7 @@ const ExplorerPage = () => {
                         </button>
                       )}
                       <button
-                        className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-400 hover:text-yellow-400 transition-colors"
-                        title="More actions"
-                        onClick={e => { e.stopPropagation(); }}
-                      >
-                        <FiMoreVertical className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-400 hover:text-red-400 transition-colors"
+                        className="p-2 rounded-lg bg-gray-700 hover:bg-red-800 text-cyan-400 hover:text-red-400 transition-colors shadow"
                         title="Delete"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1067,7 +1090,7 @@ const ExplorerPage = () => {
       <div className="fixed bottom-6 right-6 z-30 md:hidden">
         <button
           onClick={() => setShowUploadModal(true)}
-          className="p-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-xl hover:shadow-2xl transition-all"
+          className="p-4 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-cyan-600 text-white shadow-xl hover:shadow-2xl transition-all animate-glow"
         >
           <FiPlus className="w-6 h-6" />
         </button>
@@ -1081,7 +1104,7 @@ const ExplorerPage = () => {
         file={fileToDelete}
         confirmDisabled={batchDeleting}
       />
-      
+
       <UploadModal
         show={showUploadModal}
         onClose={() => setShowUploadModal(false)}
@@ -1089,7 +1112,7 @@ const ExplorerPage = () => {
         connectionId={connection._id ? String(connection._id) : ""}
         currentPath={currentPath}
       />
-      
+
       <NewFolderModal
         show={showNewFolderModal}
         onClose={() => setShowNewFolderModal(false)}
@@ -1097,7 +1120,7 @@ const ExplorerPage = () => {
         connectionId={connection._id ? String(connection._id) : ""}
         currentPath={currentPath}
       />
-      
+
       <RenameModal
         show={showRenameModal}
         onClose={() => { setShowRenameModal(false); setFileToRename(null); }}
@@ -1106,14 +1129,62 @@ const ExplorerPage = () => {
         currentPath={currentPath}
         file={fileToRename}
       />
-      
+
       <FileDetailsModal
         show={showPreview}
         onClose={() => setShowPreview(false)}
         file={selectedFile}
       />
+
+      {/* Custom CSS for attractive UI */}
+      <style jsx global>{`
+        .glassmorphism {
+          background: rgba(16, 24, 39, 0.7);
+          box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+        .drop-shadow-neon {
+          text-shadow: 0 0 8px #22d3ee, 0 0 16px #2563eb;
+        }
+        .animate-glow {
+          animation: glowPulse 2.5s infinite alternate;
+        }
+        @keyframes glowPulse {
+          0% { box-shadow: 0 0 0px #22d3ee44, 0 0 0px #2563eb33; }
+          100% { box-shadow: 0 0 16px #22d3ee88, 0 0 32px #2563eb55; }
+        }
+        .animate-shake {
+          animation: shake 0.4s;
+        }
+        @keyframes shake {
+          0% { transform: translateX(0); }
+          20% { transform: translateX(-4px); }
+          40% { transform: translateX(4px); }
+          60% { transform: translateX(-4px); }
+          80% { transform: translateX(4px); }
+          100% { transform: translateX(0); }
+        }
+        .animate-fadeInDown {
+          animation: fadeInDown 0.5s;
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-30px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+        .animate-progress {
+          animation: progressBar 1.2s linear infinite;
+        }
+        @keyframes progressBar {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        .font-mono {
+          font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+        }
+      `}</style>
     </div>
-  );
+  )
 };
 
 export default ExplorerPage;
