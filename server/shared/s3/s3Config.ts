@@ -146,17 +146,23 @@ export async function getSignedUrlForFile({
   credentials,
   key,
   expiresIn = 3600,
+  responseContentDisposition,
 }: {
   credentials: S3Credentials;
   key: string;
   expiresIn?: number;
+  responseContentDisposition?: string;
 }): Promise<string> {
   validateCredentials(credentials);
   const { bucketName } = credentials;
   const s3 = createS3Client(credentials);
 
   try {
-    const command = new GetObjectCommand({ Bucket: bucketName, Key: key });
+    const command = new GetObjectCommand({ 
+      Bucket: bucketName, 
+      Key: key,
+      ...(responseContentDisposition ? { ResponseContentDisposition: responseContentDisposition } : {})
+    });
     return await getSignedUrl(s3, command, { expiresIn });
   } catch (err) {
     throw new Error(`Failed to generate signed URL: ${err instanceof Error ? err.message : String(err)}`);

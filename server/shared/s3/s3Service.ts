@@ -67,11 +67,13 @@ export async function getDownloadUrl(params: {
   credentials?: Partial<S3Credentials>;
   key: string;
   expiresIn?: number;
+  responseContentDisposition?: string;
 }): Promise<string> {
   return getSignedUrlForFileOriginal({
     credentials: withFallbackCredentials(params.credentials),
     key: params.key,
     expiresIn: params.expiresIn,
+    responseContentDisposition: params.responseContentDisposition,
   });
 }
 

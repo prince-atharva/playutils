@@ -9,16 +9,49 @@ interface FileDetailsModalProps {
   loading?: boolean;
 }
 
+// Helper to guess content type from file extension
+function guessContentType(filename: string): string {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'jpg':
+    case 'jpeg': return 'image/jpeg';
+    case 'png': return 'image/png';
+    case 'gif': return 'image/gif';
+    case 'webp': return 'image/webp';
+    case 'svg': return 'image/svg+xml';
+    case 'pdf': return 'application/pdf';
+    case 'txt': return 'text/plain';
+    case 'md': return 'text/markdown';
+    case 'csv': return 'text/csv';
+    case 'json': return 'application/json';
+    case 'js': return 'application/javascript';
+    case 'ts': return 'application/typescript';
+    case 'css': return 'text/css';
+    case 'html':
+    case 'htm': return 'text/html';
+    default: return '';
+  }
+}
+
 export default function FileDetailsModal({ show, file, onClose }: FileDetailsModalProps) {
   const [textPreview, setTextPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  // Use backend contentType or guess from extension
+  const contentType = file?.contentType || (file?.name ? guessContentType(file.name) : '');
 
   // Helper: Detect file type
-  const isImage = file?.type === 'file' && file.contentType?.startsWith('image/');
-  const isPDF = file?.type === 'file' && (file.contentType === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
-  const isText = file?.type === 'file' && (file.contentType?.startsWith('text/') || file.name.toLowerCase().match(/\.(txt|md|csv|json|js|ts|css|html)$/));
+  const isImage = file?.type === 'file' && contentType.startsWith('image/');
+  const isPDF = file?.type === 'file' && (contentType === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
+  const isText = file?.type === 'file' && (contentType.startsWith('text/') || file.name.toLowerCase().match(/\.(txt|md|csv|json|js|ts|css|html)$/));
 
   useEffect(() => {
+    if (show && file) {
+      // Debug log for the file object
+      // eslint-disable-next-line no-console
+      console.log('FileDetailsModal file:', file);
+    }
     if (show && isText && file?.previewUrl) {
       setLoading(true);
       fetch(file.previewUrl)
@@ -29,7 +62,8 @@ export default function FileDetailsModal({ show, file, onClose }: FileDetailsMod
     } else {
       setTextPreview(null);
     }
-  }, [show, isText, file?.previewUrl]);
+    setImgError(false);
+  }, [show, isText, file?.previewUrl, file]);
 
   if (!show || !file) return null;
 
@@ -47,8 +81,16 @@ export default function FileDetailsModal({ show, file, onClose }: FileDetailsMod
           {file.lastModifiedLabel && <span><span className="font-semibold text-cyan-400">Last Modified:</span> {file.lastModifiedLabel}</span>}
         </div>
         {/* Preview logic */}
-        {isImage && file.previewUrl && (
-          <img src={file.previewUrl} alt={file.name} className="rounded-lg max-h-64 object-contain border border-gray-800" />
+        {isImage && file.previewUrl && !imgError && (
+          <img 
+            src={file.previewUrl} 
+            alt={file.name} 
+            className="rounded-lg max-h-64 object-contain border border-gray-800" 
+            onError={() => setImgError(true)}
+          />
+        )}
+        {isImage && imgError && (
+          <div className="text-red-400 text-center py-8">Unable to load image preview.</div>
         )}
         {isPDF && file.previewUrl && (
           <iframe src={file.previewUrl} title={file.name} className="w-full h-96 rounded-lg border border-gray-800 bg-white" />

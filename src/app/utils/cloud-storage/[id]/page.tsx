@@ -515,8 +515,10 @@ const ExplorerPage = () => {
           });
         });
         contentsRes.data.files.forEach((file) => {
-          let contentType = (file as any).contentType || file.storageClass || '';
-          if (!contentType) {
+          // Only use contentType if it looks like a MIME type
+          let contentType = (file as any).contentType;
+          if (!contentType || typeof contentType !== 'string' || !contentType.includes('/')) {
+            // Guess from extension
             const ext = file.key.split('.').pop()?.toLowerCase();
             if (ext === 'jpg' || ext === 'jpeg') contentType = 'image/jpeg';
             else if (ext === 'png') contentType = 'image/png';
@@ -645,7 +647,7 @@ const ExplorerPage = () => {
     selected.forEach(path => {
       const file = files.find(f => f.path === path);
       if (file && file.type === "file") {
-        const downloadUrl = `/api/cloudStorage/S3Connections/${connection._id}/download?path=${encodeURIComponent(file.path)}`;
+        const downloadUrl = `/v1/api/cloudStorage/S3Connections/${connection._id}/download?path=${encodeURIComponent(file.path)}`;
         window.open(downloadUrl, '_blank');
       }
     });
@@ -1027,7 +1029,7 @@ const ExplorerPage = () => {
                           onClick={e => {
                             e.stopPropagation();
                             if (connection) {
-                              const downloadUrl = `/api/cloudStorage/S3Connections/${connection._id}/download?path=${encodeURIComponent(file.path)}`;
+                              const downloadUrl = `/v1/api/cloudStorage/S3Connections/${connection._id}/download?path=${encodeURIComponent(file.path)}`;
                               window.open(downloadUrl, '_blank');
                             }
                           }}

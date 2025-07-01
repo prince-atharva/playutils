@@ -534,7 +534,12 @@ export const downloadS3File = async (req: Request, res: Response): Promise<void>
       bucketName: connection.bucket,
     };
     try {
-      const url = await S3Service.getDownloadUrl({ credentials, key: s3Path });
+      const filename = s3Path.split('/').pop() || 'file';
+      const url = await S3Service.getDownloadUrl({ 
+        credentials, 
+        key: s3Path, 
+        responseContentDisposition: `attachment; filename=\"${filename}\"` 
+      });
       res.redirect(url);
     } catch (err) {
       console.error('[DOWNLOAD] Failed to get download URL for key', s3Path, err);
@@ -592,6 +597,7 @@ export const previewS3File = async (req: Request, res: Response): Promise<void> 
     const { stream, contentType, contentLength } = await S3Service.getS3ObjectStream({ credentials, key: s3Path });
     // Fallback: infer content type if missing
     const finalContentType = contentType || inferContentType(s3Path);
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', finalContentType);
     if (contentLength) res.setHeader('Content-Length', contentLength);
     stream.pipe(res);
