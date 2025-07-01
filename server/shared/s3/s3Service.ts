@@ -20,6 +20,8 @@ import {
   listFolders as listFoldersOriginal,
   getBucketStats as getBucketStatsOriginal,
 } from './s3Config';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { createS3Client } from './s3Client';
 
 const defaultS3Config: S3Credentials = {
   region: process.env.AWS_REGION || '',
@@ -188,6 +190,55 @@ export async function testS3Connection(params: {
   });
 }
 
+export async function getS3ObjectRange(params: {
+  credentials?: Partial<S3Credentials>;
+  key: string;
+  start: number;
+  end: number;
+}): Promise<string> {
+  const credentials = withFallbackCredentials(params.credentials);
+  const { bucketName } = credentials;
+  const s3 = createS3Client(credentials);
+  const range = `bytes=${params.start}-${params.end}`;
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: params.key,
+    Range: range,
+  });
+  const response = await s3.send(command);
+  if (!response.Body) throw new Error('No file body returned from S3');
+  return await streamToString(response.Body as NodeJS.ReadableStream);
+}
+
+function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
+  const chunks: Buffer[] = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', chunk => chunks.push(Buffer.from(chunk)));
+    stream.on('error', reject);
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+  });
+}
+
+export async function getS3ObjectStream(params: {
+  credentials?: Partial<S3Credentials>;
+  key: string;
+}): Promise<{ stream: NodeJS.ReadableStream; contentType?: string; contentLength?: number; }> {
+  const credentials = withFallbackCredentials(params.credentials);
+  const { bucketName } = credentials;
+  const s3 = createS3Client(credentials);
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: params.key,
+  });
+  const response = await s3.send(command);
+  if (!response.Body) throw new Error('No file body returned from S3');
+  return {
+    stream: response.Body as NodeJS.ReadableStream,
+    contentType: response.ContentType,
+    contentLength: response.ContentLength,
+  };
+}
+
 export const S3Service = {
   uploadToS3,
   deleteFromS3,
@@ -202,6 +253,10 @@ export const S3Service = {
   copyS3File,
   getS3BucketStats,
   testS3Connection,
+  getS3ObjectRange,
+  getS3ObjectStream,
 };
+
+export { getS3FileMetadata as getS3ObjectMetadata };
 
 export default S3Service;

@@ -8,6 +8,7 @@ import { CloudStorageAPI, S3ConnectionData } from "@/lib/api/cloudStorage";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import ConnectionModal from "@/components/ConnectionModal";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const CloudStoragePage = () => {
   const [connections, setConnections] = useState<ICloudStorage[]>([]);
@@ -256,10 +257,13 @@ const ConnectionCard = ({
               <FiTrash2 className="w-4 h-4" />
             </button>
           </div>
-          <button className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors">
+          <Link
+            href={`/utils/cloud-storage/${connection._id}`}
+            className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          >
             <span>Explore</span>
             <FiExternalLink className="w-3.5 h-3.5" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
